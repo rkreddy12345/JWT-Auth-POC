@@ -13,6 +13,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
@@ -43,8 +45,8 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        UserDetails admin = User.withUsername ( "admin" ).password( "{noop}admin" ).roles( "ADMIN").build();
-        UserDetails user = User.withUsername ( "user" ).password( "{noop}user" ).roles("USER").build();
+        UserDetails admin = User.withUsername ( "admin" ).password( passwordEncoder ().encode ( "admin" ) ).roles( "ADMIN").build();
+        UserDetails user = User.withUsername ( "user" ).password( passwordEncoder ().encode ( "user" ) ).roles("USER").build();
 
         JdbcUserDetailsManager userDetailsManager=new JdbcUserDetailsManager ( dataSource );
         userDetailsManager.createUser ( admin );
@@ -56,6 +58,11 @@ public class SecurityConfig {
     @Bean
     public RoleHierarchy roleHierarchy() {
         return RoleHierarchyImpl.withDefaultRolePrefix ().role ( "ADMIN" ).implies ( "USER" ).build ();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder ();
     }
 
 }
