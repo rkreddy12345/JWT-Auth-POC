@@ -1,5 +1,7 @@
 package com.rk.security.config;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -12,14 +14,21 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import javax.sql.DataSource;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class SecurityConfig {
+
+    private final DataSource dataSource;
+
     @Bean
     public SecurityFilterChain customSecurityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests (requests->
@@ -36,7 +45,12 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         UserDetails admin = User.withUsername ( "admin" ).password( "{noop}admin" ).roles( "ADMIN").build();
         UserDetails user = User.withUsername ( "user" ).password( "{noop}user" ).roles("USER").build();
-        return new InMemoryUserDetailsManager(user, admin);
+
+        JdbcUserDetailsManager userDetailsManager=new JdbcUserDetailsManager ( dataSource );
+        userDetailsManager.createUser ( admin );
+        userDetailsManager.createUser ( user );
+        return userDetailsManager;
+        //return new InMemoryUserDetailsManager(user, admin);
     }
 
     @Bean
