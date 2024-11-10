@@ -22,7 +22,11 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain customSecurityFilterChain(HttpSecurity http) throws Exception {
-        return http.authorizeHttpRequests (requests->requests.anyRequest().authenticated())
+        return http.authorizeHttpRequests (requests->
+                        requests.requestMatchers ( "/h2-console/**" ).permitAll ()
+                                .anyRequest().authenticated())
+                .csrf (csrf->csrf.ignoringRequestMatchers ( "/h2-console/**" ))
+                .headers (headers->headers.frameOptions (frameOptionsConfig -> frameOptionsConfig.sameOrigin ()))
                 .sessionManagement (session->session.sessionCreationPolicy ( SessionCreationPolicy.STATELESS ))
                 .httpBasic (withDefaults())
                 .build ();
