@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor (onConstructor_ = {@Autowired})
 public class LoginController {
     private static final Logger logger= LoggerFactory.getLogger ( LoginController.class );
@@ -32,7 +33,7 @@ public class LoginController {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
 
-    @PostMapping ("/login")
+    @PostMapping ("/auth/login")
     public ResponseEntity<Object> authenticateUser( @RequestBody LoginRequest loginRequest ) {
         Authentication authentication;
         try{
