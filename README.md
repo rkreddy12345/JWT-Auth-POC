@@ -7,7 +7,7 @@ This project is a Proof of Concept (POC) to demonstrate the implementation of **
 - **Role-based Authorization**: Restricts access to resources based on user roles (`ADMIN`, `USER`).
 - **Spring Security Integration**: Leverages Spring Security for authentication and authorization.
 - **Custom Filters**: Implements a custom JWT authentication filter for validating tokens.
-- **Exception Handling**: Handles various JWT-related exceptions (e.g., expired or malformed tokens).
+- **Exception Handling**: Handles various JWT-related exceptions.
 
 ## Project Structure
 - **`com.rk.security.jwt.filter.JwtAuthenticationFilter`**: Intercepts requests to validate JWT tokens and set the authentication context.
