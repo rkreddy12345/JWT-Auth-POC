@@ -23,4 +23,4 @@ This project is a Proof of Concept (POC) to demonstrate the implementation of **
 
 ### Secured Endpoints
 - **`GET /api/v1/admin/hello`**: Accessible only to users with the `ADMIN` role.
-- **`GET /api/v1/user/hello`**: Accessible only to users with the `USER` role.
+- **`GET /api/v1/user/hello`**: Accessible only to users with the `USER`/`ADMIN` role.
